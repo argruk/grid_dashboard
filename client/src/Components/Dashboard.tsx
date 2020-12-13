@@ -1,6 +1,7 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import {getPoints} from "../Services/APIRequester";
 
+
 interface OwnProps {}
 
 interface Points{
@@ -21,12 +22,10 @@ const Dashboard: FunctionComponent<Props> = (props) => {
     useEffect(()=>{
         getPoints(12,setDataPoints)
     },[]);
+
   return (
       <div>
-          {dataPoints.map( (value, index) => {
-              return <div key={index}> {value.cadaster} </div>
-          })}
-          {/*{https://plotly.com/javascript/scattermapbox/#basic-example}*/}
+
       </div>
   );
 };

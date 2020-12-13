@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 from initializer import prepare_gridload_dataset, load_datasets, load_models
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 ev_history, ev_home_locations, ev_models, grid_locations, gridload, public_chargers_locations = load_datasets()
 grid_load_prediction_dataset = prepare_gridload_dataset(grid_locations, gridload)
@@ -9,9 +12,10 @@ grid_load_prediction_dataset = prepare_gridload_dataset(grid_locations, gridload
 grid_load_rf_model = load_models()
 
 
-# link/api/gridload?time=24
+# Example: /api/gridload?time=24
 
 @app.route('/api/gridload')
+@cross_origin()
 def grid_load():
     time = int(request.args.get("time"))
     res = []
@@ -34,6 +38,7 @@ def grid_load():
 
 
 @app.route('/api/charging')
+@cross_origin()
 def smart_charging():
     return 'TODO'
 
