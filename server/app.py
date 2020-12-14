@@ -31,11 +31,12 @@ def grid_load():
 
         res.append({'lat': grid_data['latitude'],
                     'lon': grid_data['longitude'],
+                    'address': grid_data['address'],
                     'time': grid_data['time'],
-                    'predictedLoad': prediction,
+                    'predictedLoad': round(prediction, 2),
                     'isOverloaded': str(is_overloaded),
-                    'baseLoad': grid_data['base_load'],
-                    'maxLoad': grid_data['max_load'],
+                    'baseLoad': round(grid_data['base_load'], 2),
+                    'maxLoad': round(grid_data['max_load'], 2),
                     'cadaster': grid_data['grid_cadaster']})
 
     return jsonify(res)
