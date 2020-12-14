@@ -39,15 +39,18 @@ def prepare_gridload_dataset(grid_locations, gridload):
     grid_cadaster_tmp = []
     time_tmp = []
     coordinates = [[], []]
+    address_tmp = []
     for j, gc in grid_locations.iterrows():
         for i in range(1, 25):
             grid_cadaster_tmp.append(gc['cadaster'])
             time_tmp.append(i)
             coordinates[0].append(gc['latitude'])
             coordinates[1].append(gc['longitude'])
+            address_tmp.append(gc['address'])
 
     dataset = pd.DataFrame()
     dataset['time'] = time_tmp
+    dataset['address'] = address_tmp
     dataset['latitude'] = coordinates[0]
     dataset['longitude'] = coordinates[1]
     dataset['grid_cadaster'] = grid_cadaster_tmp

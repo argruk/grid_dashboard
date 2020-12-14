@@ -5,11 +5,14 @@ import Container from '@material-ui/core/Container';
 import {NativeSelect, Typography} from "@material-ui/core";
 
 
-interface OwnProps {}
+interface OwnProps {
+    setSelectedGrid: Function
+}
 
-interface Points{
+export interface GridData{
     lat:number,
     lon: number,
+    address: string,
     time: number,
     predictedLoad: number,
     isOverloaded: string,
@@ -19,7 +22,7 @@ interface Points{
     [key: string]: any
 }
 
-interface Chargers {
+interface ChargerData {
     lon: number,
     lat: number,
     carModel: string,
@@ -27,21 +30,21 @@ interface Chargers {
     optimizedCharge: number
 }
 
-const times:Array<number> = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
+const times:Array<number> = Array.from({length: 24}, (_, i) => i + 1);
 
 type Props = OwnProps;
 
 
 
-const Dashboard: FunctionComponent<Props> = (props) => {
+const Dashboard: FunctionComponent<Props> = ({setSelectedGrid}: OwnProps) => {
     const [time, setTime] = useState<number>(12);
 
-    const [dataPoints, setDataPoints] = useState<Array<Points>>([]);
+    const [dataPoints, setDataPoints] = useState<Array<GridData>>([]);
     const [lat, setLat] = useState<Array<number>>([]);
     const [lon, setLon] = useState<Array<number>>([]);
     const [colors, setColors] = useState<Array<string>>(['black']);
     const [centerPoint, setCenterPoint] = useState<Array<number>|undefined>(undefined);
-    const [chargers, setChargers] = useState<Array<Chargers>>([]);
+    const [chargers, setChargers] = useState<Array<ChargerData>>([]);
 
 
     const getBy = (dataset:Array<any>,key:string) => {
@@ -61,8 +64,9 @@ const Dashboard: FunctionComponent<Props> = (props) => {
         getPoints(+event.target.value,setDataPoints);
     };
 
-    const handleOverloadedClick = (point:Points) => {
+    const handleOverloadedClick = (point:GridData) => {
         getChargers(point.time,point.cadaster,point.baseLoad,point.maxLoad,setChargers);
+        setSelectedGrid(point);
     };
 
     useEffect(()=>{
@@ -119,6 +123,7 @@ const Dashboard: FunctionComponent<Props> = (props) => {
                           }
                           onClick={(event)=>{handleOverloadedClick(dataPoints[event.points[0].pointIndex])}}
                           onHover={()=>{}}
+
                       />
                   </Container>
 
