@@ -19,7 +19,7 @@ export const GridInfo = ({selectedGrid, setSelectedGrid}: OwnProps) => {
             <CardActionArea>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                        {selectedGrid.cadaster}
+                        <b> Grid: </b>{selectedGrid.cadaster}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                         <b> Address: </b> {selectedGrid.address}
