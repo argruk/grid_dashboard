@@ -107,7 +107,7 @@ const Dashboard: FunctionComponent<Props> = (props) => {
                                   type: "scattermapbox",
                                   lon: lon,
                                   lat: lat,
-                                  marker: { color: colors, size: 7 }
+                                  marker: { color: colors, size: 10 }
                               }
                           ]}
                           layout={
