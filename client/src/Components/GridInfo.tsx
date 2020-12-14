@@ -7,13 +7,15 @@ import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from '@material-ui/core/CardActions';
+import {Dispatch, SetStateAction} from "react";
 
 interface OwnProps {
     selectedGrid: GridData
-    setSelectedGrid: Function
+    setSelectedGrid: Function,
+    setFocused:Dispatch<SetStateAction<boolean>>
 }
 
-export const GridInfo = ({selectedGrid, setSelectedGrid}: OwnProps) => {
+export const GridInfo = ({selectedGrid, setSelectedGrid,setFocused}: OwnProps) => {
     return (
         <Card style={{marginRight:'10px'}}>
             <CardActionArea>
@@ -36,7 +38,7 @@ export const GridInfo = ({selectedGrid, setSelectedGrid}: OwnProps) => {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary" onClick={()=>setSelectedGrid(undefined)}>
+                <Button size="small" color="primary" onClick={()=>{setSelectedGrid(undefined);setFocused(false)}}>
                     Close
                 </Button>
             </CardActions>
