@@ -56,7 +56,7 @@ def smart_charging():
 
     for charger_cadaster in chargers:
         charger_data = all_chargers_dataset[all_chargers_dataset['cadaster'] == charger_cadaster] \
-            .iloc[0][['cadaster', 'longitude', 'latitude', 'is_home_loc']]
+            .iloc[0][['cadaster', 'longitude', 'latitude', 'is_home_loc', 'address']]
 
         charger_data['time'] = time
         # predict car model
@@ -78,8 +78,10 @@ def smart_charging():
             'lon': charger_data['longitude'],
             'lat': charger_data['latitude'],
             'carModel': ev_models.iloc[predicted_car_model]['models'],  # the human name
-            'chargeNeed': predicted_charge_need,
-            'optimizedCharge': predicted_charge_need
+            'chargeNeed': round(predicted_charge_need, 2),
+            'optimizedCharge': round(predicted_charge_need, 2),
+            'address': charger_data['address'],
+            'cadaster': charger_data['cadaster']
         })
 
     # get sum of all charge need predictions
@@ -95,7 +97,7 @@ def smart_charging():
     while base_load + total > max_load:
         # decrease charge outputs by decrease rate
         for i, _ in enumerate(out):
-            out[i]['optimizedCharge'] = out[i]['chargeNeed'] * (1.0 - decrease_rate)
+            out[i]['optimizedCharge'] = round(out[i]['chargeNeed'] * (1.0 - decrease_rate), 2)
             out[i]['decreasePercent'] = decrease_rate * 100
 
         total = sum([entity['optimizedCharge'] for entity in out])

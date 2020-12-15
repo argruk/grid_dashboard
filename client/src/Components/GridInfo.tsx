@@ -12,12 +12,12 @@ import {Dispatch, SetStateAction} from "react";
 interface OwnProps {
     selectedGrid: GridData
     setSelectedGrid: Function,
-    setFocused:Dispatch<SetStateAction<boolean>>
+    setFocused:Dispatch<SetStateAction<boolean>>,
 }
 
 export const GridInfo = ({selectedGrid, setSelectedGrid,setFocused}: OwnProps) => {
     return (
-        <Card style={{marginRight:'10px'}}>
+        <Card style={{margin:'5px'}}>
             <CardActionArea>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">

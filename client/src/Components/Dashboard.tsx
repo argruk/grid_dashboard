@@ -10,7 +10,9 @@ interface OwnProps {
     setSelectedGrid: Function,
     selectedGrid:GridData|undefined,
     focused:boolean,
-    setFocused:Dispatch<SetStateAction<boolean>>
+    setFocused:Dispatch<SetStateAction<boolean>>,
+    chargers: Array<ChargerData>,
+    setChargers: Function
 }
 
 export interface GridData{
@@ -26,22 +28,24 @@ export interface GridData{
     [key: string]: any
 }
 
-interface ChargerData {
+export interface ChargerData {
     lon: number,
     lat: number,
     carModel: string,
     chargeNeed: number,
-    optimizedCharge: number
+    optimizedCharge: number,
+    address: string,
+    cadaster: string,
+    decreasePercent: number
 }
 
 const times:Array<number> = Array.from({length: 24}, (_, i) => i + 1);
 
 type Props = OwnProps;
 
-const Dashboard: FunctionComponent<Props> = ({setSelectedGrid,focused,setFocused}: OwnProps) => {
+const Dashboard: FunctionComponent<Props> = ({setSelectedGrid,focused,setFocused, chargers, setChargers}: OwnProps) => {
     const [time, setTime] = useState<number>(12);
 
-    const [chargers, setChargers] = useState<Array<ChargerData>>([]);
     const [dataPoints, setDataPoints] = useState<Array<GridData>>([]);
 
     const [lat, setLat] = useState<Array<number>>([]);
@@ -57,7 +61,13 @@ const Dashboard: FunctionComponent<Props> = ({setSelectedGrid,focused,setFocused
     };
 
     const getColors = () => {
-        return dataPoints.map(point => {return (point['isOverloaded'] === "True")? ('red') : ('blue') })
+        return dataPoints.map(point => {
+            if(point['isOverloaded'] === 'True'){
+                if(point.baseLoad < point.maxLoad) return 'red';
+                return 'purple';
+            }
+            return 'blue';
+        })
     };
 
     const average = (nums:Array<number>) => {
@@ -66,15 +76,17 @@ const Dashboard: FunctionComponent<Props> = ({setSelectedGrid,focused,setFocused
 
     const loadTime = (event:ChangeEvent<HTMLSelectElement>) => {
         setTime(+event.target.value);
-        getPoints(+event.target.value,setDataPoints);
+        setSelectedGrid(undefined);
+        getPoints(time,setDataPoints).then(()=> setFocused(false));
     };
 
     const handleOverloadedClick = (idx:number) => {
         let point = dataPoints[idx];
         let color = colors[idx];
 
-        if (color === "red"){
-            getChargers(point.time,point.cadaster,point.baseLoad,point.maxLoad,setChargers);
+        setChargers([]);
+        if (color === 'red' || color === 'purple'){
+            getChargers(point.time,point.cadaster,point.baseLoad,point.maxLoad, setChargers);
             setCenterPoint([point.lat,point.lon]);
             setFocused(true);
         }
@@ -111,7 +123,6 @@ const Dashboard: FunctionComponent<Props> = ({setSelectedGrid,focused,setFocused
             lat_a.push(centerPoint[0]);
             lon_a.push(centerPoint[1]);
             colors_a.push("red");
-            console.log(colors_a);
             setLat(lat_a);
             setLon(lon_a);
             setColors(colors_a);
