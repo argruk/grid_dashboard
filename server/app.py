@@ -71,7 +71,8 @@ def smart_charging():
 
         # then predict charge need
         charger_data['soc'] = predicted_soc
-        predicted_charge_need = consumption_predictor.predict([charger_data[['time', 'longitude', 'latitude', 'soc']]])[0]
+        # predicted_charge_need = consumption_predictor.predict([charger_data[['time', 'longitude', 'latitude', 'soc']]])[0]
+        predicted_charge_need = min(charger_data['battery_size'] - charger_data['soc'], charger_data['charge_power'])
 
         # append all the data to the list
         out.append({
@@ -80,6 +81,7 @@ def smart_charging():
             'carModel': ev_models.iloc[predicted_car_model]['models'],  # the human name
             'chargeNeed': round(predicted_charge_need, 2),
             'optimizedCharge': round(predicted_charge_need, 2),
+            'decreasePercent': 0,
             'address': charger_data['address'],
             'cadaster': charger_data['cadaster']
         })
